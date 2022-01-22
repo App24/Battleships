@@ -4,6 +4,7 @@
 
 int main() {
     Utilities::init();
+    Utilities::setDifficulty(Difficulty::Easy);
 
     Game game;
     game.setupBoard();

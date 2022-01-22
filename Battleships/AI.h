@@ -3,9 +3,11 @@
 
 class AI {
 public:
-	AI(Board& board);
+	AI(Board& aiBoard, Board& playerBoard);
+
+	void doTurn();
 private:
 	void placeShips();
 
-	Board& m_board;
+	Board& m_aiBoard, m_playerBoard;
 };

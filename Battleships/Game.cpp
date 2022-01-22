@@ -2,7 +2,7 @@
 #include "Utilities.h"
 #include <iostream>
 
-Game::Game():m_ai(m_aiBoard) {
+Game::Game():m_ai(m_aiBoard, m_playerBoard) {
 
 }
 
@@ -192,10 +192,11 @@ void Game::playGame()
 
         case KEY_ENTER: {
             if (m_guessBoard.getShip(x,y)->getType() != ShipType::Shot) {
-                m_aiBoard.getShip(x, y)->setDamaged(true);
+                m_aiBoard.hitShip(x, y);
                 m_guessBoard.getShip(x, y)->setDamaged(m_aiBoard.getShip(x, y)->getType() != ShipType::Null);
                 m_guessBoard.getShip(x, y)->setType(ShipType::Shot);
                 updateShipSelection(m_guessBoard, previousShipType, x, y);
+                m_ai.doTurn();
             }
         }break;
         }

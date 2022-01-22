@@ -45,6 +45,16 @@ public:
 	static void resetColor();
 
 	static int getInput();
+
+	static Difficulty getDifficulty();
+	static void setDifficulty(Difficulty difficulty);
 private:
 	static HANDLE hConsole;
+	static Difficulty m_difficulty;
+};
+
+enum class Difficulty {
+	Easy,
+	Medium,
+	Hard
 };
