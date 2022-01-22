@@ -68,7 +68,7 @@ void Board::showBoard() {
 					}
 				}
 				else {
-					if (ship->getType() == ShipType::Null||ship->getType()==ShipType::SelectorOcean)
+					if (ship->getType() == ShipType::Null||ship->getType()==ShipType::SelectorOcean||ship->getType()==ShipType::Shot)
 						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_BLUE));
 					else
 						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_GREY));

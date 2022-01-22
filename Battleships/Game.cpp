@@ -2,7 +2,7 @@
 #include "Utilities.h"
 #include <iostream>
 
-Game::Game() {
+Game::Game():m_ai(m_aiBoard) {
 
 }
 
@@ -145,9 +145,12 @@ void Game::playGame()
 {
     unsigned int x = 0;
     unsigned int y = 0;
-    ShipType previousShipType = m_playerBoard.getShip(x, y)->getType();
-    updateShipSelection(m_playerBoard, previousShipType, x, y);
+    ShipType previousShipType = m_guessBoard.getShip(x, y)->getType();
+    updateShipSelection(m_guessBoard, previousShipType, x, y);
     while (1) {
+        std::cout << "Other Player's Board" << std::endl;
+        m_guessBoard.showBoard();
+        std::cout << "Your Board" << std::endl;
         m_playerBoard.showBoard();
 
         int c = Utilities::getInput();
@@ -156,40 +159,43 @@ void Game::playGame()
         {
         case KEY_LEFT: {
             if (x > 0) {
-                m_playerBoard.getShip(x, y)->setType(previousShipType);
+                m_guessBoard.getShip(x, y)->setType(previousShipType);
                 x--;
-                updateShipSelection(m_playerBoard, previousShipType, x, y);
+                updateShipSelection(m_guessBoard, previousShipType, x, y);
             }
         }break;
 
         case KEY_RIGHT: {
-            if (x < m_playerBoard.getBoardSize() - 1) {
-                m_playerBoard.getShip(x, y)->setType(previousShipType);
+            if (x < m_guessBoard.getBoardSize() - 1) {
+                m_guessBoard.getShip(x, y)->setType(previousShipType);
                 x++;
-                updateShipSelection(m_playerBoard, previousShipType, x, y);
+                updateShipSelection(m_guessBoard, previousShipType, x, y);
             }
         }break;
 
 
         case KEY_UP: {
             if (y > 0) {
-                m_playerBoard.getShip(x, y)->setType(previousShipType);
+                m_guessBoard.getShip(x, y)->setType(previousShipType);
                 y--;
-                updateShipSelection(m_playerBoard, previousShipType, x, y);
+                updateShipSelection(m_guessBoard, previousShipType, x, y);
             }
         }break;
 
         case KEY_DOWN: {
-            if (y < m_playerBoard.getBoardSize() - 1) {
-                m_playerBoard.getShip(x, y)->setType(previousShipType);
+            if (y < m_guessBoard.getBoardSize() - 1) {
+                m_guessBoard.getShip(x, y)->setType(previousShipType);
                 y++;
-                updateShipSelection(m_playerBoard, previousShipType, x, y);
+                updateShipSelection(m_guessBoard, previousShipType, x, y);
             }
         }break;
 
         case KEY_ENTER: {
-            if (previousShipType != ShipType::Null&&!m_playerBoard.getShip(x,y)->isDamaged()) {
-                m_playerBoard.getShip(x, y)->setDamaged(true);
+            if (m_guessBoard.getShip(x,y)->getType() != ShipType::Shot) {
+                m_aiBoard.getShip(x, y)->setDamaged(true);
+                m_guessBoard.getShip(x, y)->setDamaged(m_aiBoard.getShip(x, y)->getType() != ShipType::Null);
+                m_guessBoard.getShip(x, y)->setType(ShipType::Shot);
+                updateShipSelection(m_guessBoard, previousShipType, x, y);
             }
         }break;
         }
@@ -204,6 +210,11 @@ Board& Game::getPlayerBoard() {
 
 Board& Game::getAIBoard() {
     return m_aiBoard;
+}
+
+Board& Game::getGuessBoard()
+{
+    return m_guessBoard;
 }
 
 void Game::setShipType(Board& board, unsigned int x, unsigned int y, ShipType shipType, unsigned int shipSize, bool horizontal) {
@@ -255,9 +266,9 @@ bool Game::anyOverlay(Board& board) {
 }
 
 void Game::updateShipSelection(Board& board, ShipType& previousShipType, unsigned int x, unsigned int y) {
-    previousShipType = m_playerBoard.getShip(x, y)->getType();
-    if (previousShipType == ShipType::Null)
-        m_playerBoard.getShip(x, y)->setType(ShipType::SelectorOcean);
+    previousShipType = board.getShip(x, y)->getType();
+    if (previousShipType == ShipType::Null || (previousShipType == ShipType::Shot && !board.getShip(x, y)->isDamaged()))
+        board.getShip(x, y)->setType(ShipType::SelectorOcean);
     else
-        m_playerBoard.getShip(x, y)->setType(ShipType::Selector);
+        board.getShip(x, y)->setType(ShipType::Selector);
 }

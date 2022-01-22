@@ -26,6 +26,8 @@ std::string Ship::getStrRepr() {
 	case ShipType::SelectorOcean:
 	case ShipType::Selector:
 		return " + ";
+	case ShipType::Shot:
+		return " x ";
 	default:
 		return "";
 	}

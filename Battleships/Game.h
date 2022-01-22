@@ -1,5 +1,6 @@
 #pragma once
 #include "Board.h"
+#include "AI.h"
 #include <vector>
 
 class Game {
@@ -12,8 +13,10 @@ public:
 
 	Board& getPlayerBoard();
 	Board& getAIBoard();
+	Board& getGuessBoard();
 private:
-	Board m_playerBoard, m_aiBoard;
+	Board m_playerBoard, m_aiBoard, m_guessBoard;
+	AI m_ai;
 
 	void setShipType(Board& board, unsigned int x, unsigned int y, ShipType shipType, unsigned int shipSize, bool horizontal);
 	void setShipType(Board& board, unsigned int x, unsigned int y, std::vector<ShipType> shipTypes, bool horizontal);
