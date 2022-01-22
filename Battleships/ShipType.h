@@ -6,8 +6,10 @@ enum class ShipType {
 	Submarine,
 	Cruiser,
 	Battleship,
-	Carrier
+	Carrier,
+	SelectorOcean,
+	Selector
 };
 
 static const char* ship_type_str[] =
-{ "Null", "Destroyer", "Submarine", "Cruiser", "Battleship", "Carrier" };
+{ "Null", "Destroyer", "Submarine", "Cruiser", "Battleship", "Carrier", "Selector" , "Selector" };

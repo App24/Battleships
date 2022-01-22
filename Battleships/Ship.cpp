@@ -23,6 +23,9 @@ std::string Ship::getStrRepr() {
 		return "bat";
 	case ShipType::Carrier:
 		return "car";
+	case ShipType::SelectorOcean:
+	case ShipType::Selector:
+		return " + ";
 	default:
 		return "";
 	}

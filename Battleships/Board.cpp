@@ -59,10 +59,16 @@ void Board::showBoard() {
 			else {
 				Ship* ship = getShip(x, y);
 				std::string repr = ship->getStrRepr();
-				if (ship->isDamaged())
-					Utilities::setColor(GET_BACKGROUND(DARK_RED, DARK_GREY));
+				if (ship->isDamaged()) {
+					if (ship->getType() == ShipType::Selector || ship->getType() == ShipType::SelectorOcean) {
+						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_GREY));
+					}
+					else {
+						Utilities::setColor(GET_BACKGROUND(DARK_RED, DARK_GREY));
+					}
+				}
 				else {
-					if (ship->getType() == ShipType::Null)
+					if (ship->getType() == ShipType::Null||ship->getType()==ShipType::SelectorOcean)
 						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_BLUE));
 					else
 						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_GREY));

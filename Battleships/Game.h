@@ -8,8 +8,10 @@ public:
 
 	void setupBoard();
 
-	Board* getPlayerBoard();
-	Board* getAIBoard();
+	void playGame();
+
+	Board& getPlayerBoard();
+	Board& getAIBoard();
 private:
 	Board m_playerBoard, m_aiBoard;
 
@@ -19,4 +21,6 @@ private:
 	std::vector<ShipType> getShipTypes(Board& board, unsigned int x, unsigned int y, unsigned int shipSize, bool horizontal);
 
 	bool anyOverlay(Board& board);
+
+	void updateShipSelection(Board& board, ShipType& previousShipType, unsigned int x, unsigned int y);
 };
