@@ -1,5 +1,6 @@
 #include "Utilities.h"
 #include <conio.h>
+#include <iostream>
 
 HANDLE Utilities::hConsole;
 Difficulty Utilities::m_difficulty;
@@ -83,4 +84,13 @@ bool Utilities::anyOverlay(Board& board) {
         }
     }
     return false;
+}
+
+std::string Utilities::getStrPos(unsigned int x, unsigned int y) {
+    std::string str;
+    str.push_back(((char)65 + x));
+    str.push_back(' ');
+    str += std::to_string(y + 1);
+
+    return str;
 }

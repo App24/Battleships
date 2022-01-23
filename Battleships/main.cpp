@@ -7,6 +7,6 @@ int main() {
     Utilities::setDifficulty(Difficulty::Medium);
 
     Game game;
-    game.setupBoard();
+    game.startGame();
     return 0;
 }

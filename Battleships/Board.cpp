@@ -93,15 +93,6 @@ void Board::showBoard() {
 	}
 }
 
-std::string Board::getStrPos(unsigned int x, unsigned int y) {
-	std::string str;
-	str.push_back(((char)65 + x));
-	str.push_back(' ');
-	str += std::to_string(y + 1);
-
-	return str;
-}
-
 bool Board::hitShip(unsigned int x, unsigned int y) {
 	Ship* ship = getShip(x, y);
 	if (ship->getType() == ShipType::Null)

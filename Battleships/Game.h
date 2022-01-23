@@ -7,9 +7,7 @@ class Game {
 public:
 	Game();
 
-	void setupBoard();
-
-	void playGame();
+	void startGame();
 
 	Board& getPlayerBoard();
 	Board& getAIBoard();
@@ -17,4 +15,10 @@ public:
 private:
 	Board m_playerBoard, m_aiBoard, m_guessBoard;
 	AI m_ai;
+
+	void setDifficulty();
+
+	void setupBoard();
+
+	void playGame();
 };

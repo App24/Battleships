@@ -6,6 +6,53 @@ Game::Game():m_ai(m_aiBoard, m_playerBoard) {
 
 }
 
+void Game::startGame()
+{
+    setDifficulty();
+}
+
+void Game::setDifficulty() {
+    Difficulty currentDifficulty = (Difficulty)0;
+    bool finished = false;
+    int colors[] = { DARK_GREEN,YELLOW,DARK_RED };
+    while (!finished) {
+        int currentDifficultyInt = (int)currentDifficulty;
+        std::cout << "Current Difficulty: ";
+        Utilities::setColor(colors[currentDifficultyInt]);
+        std::cout << difficulty_str[currentDifficultyInt] << std::endl;
+        Utilities::resetColor();
+
+        std::cout << std::endl;
+
+        std::cout << "Change Selection: Arrow Keys" << std::endl;
+        std::cout << "Confirm Selection: Enter Key" << std::endl;
+
+        int c = Utilities::getInput();
+
+        switch (c)
+        {
+        case KEY_LEFT: {
+            if (currentDifficultyInt > 0)
+                currentDifficulty = (Difficulty)--currentDifficultyInt;
+        }break;
+
+        case KEY_RIGHT: {
+            if (currentDifficultyInt < 2)
+                currentDifficulty = (Difficulty)++currentDifficultyInt;
+        }break;
+
+        case KEY_ENTER: {
+            Utilities::setDifficulty(currentDifficulty);
+            finished = true;
+        }break;
+        }
+
+        system("cls");
+    }
+
+    setupBoard();
+}
+
 void Game::setupBoard() {
     unsigned int x = 0;
     unsigned int y = 0;
@@ -35,6 +82,13 @@ void Game::setupBoard() {
 
         m_playerBoard.showBoard();
 
+        std::cout << std::endl;
+
+        std::cout << "Change/Move Selection: Arrow Keys" << std::endl;
+        std::cout << "Rotate: R Key" << std::endl;
+        std::cout << "Confirm Selection: Enter Key" << std::endl;
+        std::cout << "Go Back/Finish: Escape Key" << std::endl;
+
         int c = Utilities::getInput();
 
         if (selectMode) {
@@ -62,6 +116,13 @@ void Game::setupBoard() {
 
             case KEY_ESCAPE: {
                 finished = true;
+                for (size_t i = 0; i < 6; i++)
+                {
+                    if (remainingShips[i] > 0) {
+                        finished = false;
+                        break;
+                    }
+                }
             }break;
             }
         }
@@ -151,6 +212,11 @@ void Game::playGame()
         m_guessBoard.showBoard();
         std::cout << "Your Board" << std::endl;
         m_playerBoard.showBoard();
+
+        std::cout << std::endl;
+
+        std::cout << "Change/Move Selection: Arrow Keys" << std::endl;
+        std::cout << "Confirm Selection: Enter Key" << std::endl;
 
         int c = Utilities::getInput();
 

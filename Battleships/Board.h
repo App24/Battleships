@@ -14,8 +14,6 @@ public:
 
 	void showBoard();
 
-	std::string getStrPos(unsigned int x, unsigned int y);
-
 	bool hitShip(unsigned int x, unsigned int y);
 private:
 	Ship* m_ships;

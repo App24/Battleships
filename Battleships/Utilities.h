@@ -1,7 +1,9 @@
 #pragma once
 #include <windows.h>
 #include <vector>
+#include <string>
 #include "Board.h"
+#include "Difficulty.h"
 
 #pragma region COLOR_DEFINES
 
@@ -38,12 +40,6 @@
 
 #pragma endregion
 
-enum class Difficulty {
-	Easy,
-	Medium,
-	Hard
-};
-
 class Utilities {
 public:
 	static void init();
@@ -64,6 +60,8 @@ public:
 	static void updateShipSelection(Board& board, ShipType& previousShipType, unsigned int x, unsigned int y);
 
 	static bool anyOverlay(Board& board);
+
+	static std::string getStrPos(unsigned int x, unsigned int y);
 private:
 	static HANDLE hConsole;
 	static Difficulty m_difficulty;
