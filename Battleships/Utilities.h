@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Difficulty.h"
 
+// The different color defines used to print color to the console
 #pragma region COLOR_DEFINES
 
 #define BLACK 0
@@ -28,6 +29,7 @@
 
 #pragma endregion
 
+// Defines for the different keys used in the game
 #pragma region KEY_DEFINES
 
 #define KEY_R 114
@@ -42,9 +44,12 @@
 
 class Utilities {
 public:
+	// Assign hConsole
 	static void init();
 
+	// Set output color
 	static void setColor(WORD wAttributes);
+	// Reset output color
 	static void resetColor();
 
 	static int getInput();
@@ -59,8 +64,10 @@ public:
 
 	static void updateShipSelection(Board& board, ShipType& previousShipType, unsigned int x, unsigned int y);
 
+	// Check if any ships are overlaying
 	static bool anyOverlay(Board& board);
 
+	// Check if all ships on a board have been destroyed
 	static bool allDestroyed(Board& board);
 
 	static std::string getStrPos(unsigned int x, unsigned int y);

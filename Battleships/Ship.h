@@ -7,6 +7,7 @@ public:
 	Ship(ShipType shipType);
 	Ship();
 
+	// Get the 3 char wide representation of the ship
 	std::string getStrRepr();
 
 	void setDamaged(bool value);
