@@ -207,7 +207,9 @@ void Game::playGame()
     unsigned int y = 0;
     ShipType previousShipType = m_guessBoard.getShip(x, y)->getType();
     Utilities::updateShipSelection(m_guessBoard, previousShipType, x, y);
-    while (1) {
+    bool playerWon = false;
+    bool finished = false;
+    while (!finished) {
         std::cout << "Other Player's Board" << std::endl;
         m_guessBoard.showBoard();
         std::cout << "Your Board" << std::endl;
@@ -256,18 +258,33 @@ void Game::playGame()
         }break;
 
         case KEY_ENTER: {
-            if (m_guessBoard.getShip(x,y)->getType() != ShipType::Shot) {
+            if (m_guessBoard.getShip(x, y)->getType() != ShipType::Shot) {
                 m_aiBoard.hitShip(x, y);
                 m_guessBoard.getShip(x, y)->setDamaged(m_aiBoard.getShip(x, y)->getType() != ShipType::Null);
                 m_guessBoard.getShip(x, y)->setType(ShipType::Shot);
                 Utilities::updateShipSelection(m_guessBoard, previousShipType, x, y);
                 m_ai.doTurn();
+                if (Utilities::allDestroyed(m_aiBoard) || Utilities::allDestroyed(m_playerBoard)) {
+                    finished = true;
+                    playerWon = Utilities::allDestroyed(m_aiBoard);
+                }
             }
         }break;
         }
 
         system("cls");
     }
+
+    if (playerWon)
+        Utilities::setColor(DARK_GREEN);
+    else
+        Utilities::setColor(DARK_RED);
+    std::cout << (playerWon ? "You Won!" : "AI Won!") << std::endl;
+    Utilities::resetColor();
+    std::cout << "Your Opponent's Board" << std::endl;
+    m_aiBoard.showBoard();
+    std::cout << "Your Board" << std::endl;
+    m_playerBoard.showBoard();
 }
 
 Board& Game::getPlayerBoard() {

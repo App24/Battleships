@@ -61,6 +61,8 @@ public:
 
 	static bool anyOverlay(Board& board);
 
+	static bool allDestroyed(Board& board);
+
 	static std::string getStrPos(unsigned int x, unsigned int y);
 private:
 	static HANDLE hConsole;

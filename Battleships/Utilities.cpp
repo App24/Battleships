@@ -86,6 +86,22 @@ bool Utilities::anyOverlay(Board& board) {
     return false;
 }
 
+bool Utilities::allDestroyed(Board& board)
+{
+    for (size_t y = 0; y < board.getBoardSize(); y++)
+    {
+        for (size_t x = 0; x < board.getBoardSize(); x++)
+        {
+            Ship* ship = board.getShip(x, y);
+            if (ship->getType() == ShipType::Null || ship->getType() == ShipType::Selector || ship->getType() == ShipType::SelectorOcean)
+                continue;
+            if (!board.getShip(x, y)->isDamaged())
+                return false;
+        }
+    }
+    return true;
+}
+
 std::string Utilities::getStrPos(unsigned int x, unsigned int y) {
     std::string str;
     str.push_back(((char)65 + x));
