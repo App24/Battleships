@@ -221,14 +221,14 @@ std::vector<int> AI::smartTurn()
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, (m_hitSpots.size() / 2) - 1);
-    std::uniform_int_distribution<std::mt19937::result_type> dist8(0, 7);
+    std::uniform_int_distribution<std::mt19937::result_type> dist7(0, 7);
 
     int index = dist(rng) * 2;
 
     unsigned int hitX = m_hitSpots.at(index);
     unsigned int hitY = m_hitSpots.at(index + 1);
 
-    int option = dist8(rng);
+    int option = dist7(rng);
 
     switch (option)
     {
