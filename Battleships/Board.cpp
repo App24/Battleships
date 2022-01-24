@@ -9,7 +9,7 @@ Board::Board(unsigned int boardSize) : m_boardSize(boardSize) {
 	{
 		for (unsigned int x = 0; x < boardSize; x++)
 		{
-			m_ships[y * m_boardSize + x] = Ship();
+			m_ships[y * boardSize + x] = Ship();
 		}
 	}
 }
@@ -68,10 +68,12 @@ void Board::showBoard() {
 					}
 				}
 				else {
-					if (ship->getType() == ShipType::Null||ship->getType()==ShipType::SelectorOcean||ship->getType()==ShipType::Shot)
+					if (ship->getType() == ShipType::Null || ship->getType() == ShipType::SelectorOcean || ship->getType() == ShipType::Shot) {
 						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_BLUE));
-					else
+					}
+					else {
 						Utilities::setColor(GET_BACKGROUND(WHITE, DARK_GREY));
+					}
 				}
 				std::cout << repr;
 				if (repr.length() < 3) {

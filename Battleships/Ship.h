@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include "ShipType.h"
+#include <string>
 
 class Ship {
 public:

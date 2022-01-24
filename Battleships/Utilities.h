@@ -1,9 +1,9 @@
 #pragma once
+#include "Board.h"
+#include "Difficulty.h"
 #include <windows.h>
 #include <vector>
 #include <string>
-#include "Board.h"
-#include "Difficulty.h"
 
 // The different color defines used to print color to the console
 #pragma region COLOR_DEFINES
@@ -69,8 +69,6 @@ public:
 
 	// Check if all ships on a board have been destroyed
 	static bool allDestroyed(Board& board);
-
-	static std::string getStrPos(unsigned int x, unsigned int y);
 private:
 	static HANDLE hConsole;
 	static Difficulty m_difficulty;

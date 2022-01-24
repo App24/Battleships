@@ -1,4 +1,5 @@
 #include "Utilities.h"
+
 #include <conio.h>
 #include <iostream>
 
@@ -65,10 +66,12 @@ std::vector<ShipType> Utilities::getShipTypes(Board& board, unsigned int x, unsi
 
 void Utilities::updateShipSelection(Board& board, ShipType& previousShipType, unsigned int x, unsigned int y) {
     previousShipType = board.getShip(x, y)->getType();
-    if (previousShipType == ShipType::Null || (previousShipType == ShipType::Shot && !board.getShip(x, y)->isDamaged()))
+    if (previousShipType == ShipType::Null || (previousShipType == ShipType::Shot && !board.getShip(x, y)->isDamaged())) {
         board.getShip(x, y)->setType(ShipType::SelectorOcean);
-    else
+    }
+    else {
         board.getShip(x, y)->setType(ShipType::Selector);
+    }
 }
 
 /*
@@ -100,13 +103,4 @@ bool Utilities::allDestroyed(Board& board)
         }
     }
     return true;
-}
-
-std::string Utilities::getStrPos(unsigned int x, unsigned int y) {
-    std::string str;
-    str.push_back(((char)65 + x));
-    str.push_back(' ');
-    str += std::to_string(y + 1);
-
-    return str;
 }

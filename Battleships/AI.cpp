@@ -1,4 +1,5 @@
 #include "AI.h"
+
 #include "Utilities.h"
 #include <random>
 
@@ -106,21 +107,12 @@ void AI::doTurn() {
 
 void AI::placeShips()
 {
-    /*for (size_t y = 0; y < m_aiBoard.getBoardSize(); y++)
-    {
-        for (size_t x = 0; x < m_aiBoard.getBoardSize(); x++)
-        {
-            m_aiBoard.getShip(x, y)->setType((ShipType)((y * m_aiBoard.getBoardSize() + x) % 6));
-        }
-    }*/
-
     std::random_device dev;
     std::mt19937 rng(dev());
 
     ShipType currentShipType = (ShipType)1;
     for (size_t i = 0; i < 5; i++)
     {
-        // Place idk
         int currentShipTypeInt = (int)currentShipType;
 
         int shipSize = shipSizes[currentShipTypeInt];
@@ -133,8 +125,8 @@ void AI::placeShips()
         std::vector<ShipType> previousShipTypes;
 
         while(1) {
-            std::uniform_int_distribution<std::mt19937::result_type> distHor(0, 9 - shipSize);
-            std::uniform_int_distribution<std::mt19937::result_type> distVer(0, 9);
+            std::uniform_int_distribution<std::mt19937::result_type> distHor(0, (m_aiBoard.getBoardSize()-1) - shipSize);
+            std::uniform_int_distribution<std::mt19937::result_type> distVer(0, (m_aiBoard.getBoardSize() - 1));
 
             horizontal = dist1(rng);
 
@@ -163,10 +155,10 @@ std::vector<int> AI::randomTurn()
 
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist9(0, 9);
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, (m_aiBoard.getBoardSize() - 1));
 
-    x = dist9(rng);
-    y = dist9(rng);
+    x = dist(rng);
+    y = dist(rng);
 
 
     toReturn.push_back(x);
@@ -198,7 +190,9 @@ std::vector<int> AI::centerTurn()
     unsigned int x = 0;
     unsigned int y = 0;
 
+    // Get the center tile
     int middle = m_playerBoard.getBoardSize() / 2;
+    // Get how wide the center should be
     int width = m_playerBoard.getBoardSize() / 4;
 
     std::random_device dev;
@@ -219,6 +213,7 @@ std::vector<int> AI::smartTurn()
     unsigned int x = 0;
     unsigned int y = 0;
 
+    // if the AI hasnt hit any places yet, do a random turn
     if (m_hitSpots.size() <= 0) {
         return randomTurn();
     }
@@ -226,52 +221,60 @@ std::vector<int> AI::smartTurn()
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, (m_hitSpots.size() / 2) - 1);
-    std::uniform_int_distribution<std::mt19937::result_type> dist3(0, 7);
+    std::uniform_int_distribution<std::mt19937::result_type> dist8(0, 7);
 
     int index = dist(rng) * 2;
 
     unsigned int hitX = m_hitSpots.at(index);
     unsigned int hitY = m_hitSpots.at(index + 1);
 
-    int option = dist3(rng);
+    int option = dist8(rng);
 
     switch (option)
     {
+        // Top Left from the center
     case 0: {
         x = hitX - 1;
         y = hitY - 1;
     }break;
 
+        // Top Middle from the center
     case 1: {
         x = hitX;
         y = hitY - 1;
     }break;
 
+        // Top Right from the center
     case 2: {
         x = hitX + 1;
         y = hitY - 1;
     }break;
 
+        // Middle Left from the center
     case 3: {
         x = hitX - 1;
         y = hitY;
     }break;
 
+        // Middle Right from the center
     case 4: {
         x = hitX + 1;
         y = hitY;
     }break;
-
+        
+        // Bottom Left from the center
     case 5: {
         x = hitX - 1;
         y = hitY + 1;
     }break;
 
+        // Bottom Middle from the center
     case 6: {
         x = hitX;
         y = hitY + 1;
     }break;
 
+        // Bottom Right from the center
     case 7: {
         x = hitX + 1;
         y = hitY + 1;
@@ -279,6 +282,8 @@ std::vector<int> AI::smartTurn()
 
     }
 
+    // If the AI has attacked that place already, get a new place to attack
+    // Potential infinite loop?
     if (hasAttacked(x, y)) {
         return smartTurn();
     }
@@ -290,13 +295,13 @@ std::vector<int> AI::smartTurn()
 
 bool AI::hasAttacked(unsigned int x, unsigned int y)
 {
-    if(m_attackedSpots.size()<=0)
-    return false;
+    if (m_attackedSpots.size() <= 0)
+        return false;
 
-    for (size_t i = 0; i < m_attackedSpots.size()/2; i+=2)
+    for (size_t i = 0; i < m_attackedSpots.size() / 2; i += 2)
     {
         unsigned int attackX = m_attackedSpots.at(i);
-        unsigned int attackY = m_attackedSpots.at(i+1);
+        unsigned int attackY = m_attackedSpots.at(i + 1);
         if (attackX == x && attackY == y)
             return true;
     }
