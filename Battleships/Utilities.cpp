@@ -7,6 +7,7 @@ HANDLE Utilities::hConsole;
 Difficulty Utilities::m_difficulty;
 
 void Utilities::init() {
+    SetConsoleTitleA("Battleships");
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
