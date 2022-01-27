@@ -5,10 +5,13 @@
 
 HANDLE Utilities::hConsole;
 Difficulty Utilities::m_difficulty;
+std::random_device Utilities::dev;
+std::mt19937 Utilities::rng;
 
 void Utilities::init() {
     SetConsoleTitleA("Battleships");
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	rng = std::mt19937(dev());
 }
 
 void Utilities::setColor(WORD wAttributes) {
@@ -104,4 +107,10 @@ bool Utilities::allDestroyed(Board& board)
         }
     }
     return true;
+}
+
+int Utilities::randomInt(int minValue, int maxValue)
+{
+	std::uniform_int_distribution<std::mt19937::result_type> dist(minValue, maxValue);
+	return dist(rng);
 }

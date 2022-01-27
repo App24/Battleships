@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <vector>
 #include <string>
+#include <random>
 
 // The different color defines used to print color to the console
 #pragma region COLOR_DEFINES
@@ -69,7 +70,11 @@ public:
 
 	// Check if all ships on a board have been destroyed
 	static bool allDestroyed(Board& board);
+
+	static int randomInt(int minValue, int maxValue);
 private:
 	static HANDLE hConsole;
 	static Difficulty m_difficulty;
+	static std::random_device dev;
+	static std::mt19937 rng;
 };

@@ -9,114 +9,104 @@ AI::AI(Board& board, Board& playerBoard):m_aiBoard(board), m_playerBoard(playerB
 }
 
 void AI::doTurn() {
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist1(0, 1);
-    std::uniform_int_distribution<std::mt19937::result_type> dist3(0, 3);
+	unsigned int x = 0;
+	unsigned int y = 0;
 
-    unsigned int x = 0;
-    unsigned int y = 0;
+	switch (Utilities::getDifficulty()) {
+		// Truly Random
+	case Difficulty::Easy: {
+		std::vector<int> pos = randomTurn();
+		x = pos.at(0);
+		y = pos.at(1);
+	}break;
 
-    switch (Utilities::getDifficulty()) {
-        // Truly Random
-    case Difficulty::Easy: {
-        std::vector<int> pos = randomTurn();
-        x = pos.at(0);
-        y = pos.at(1);
-    }break;
+		// Some Intelligence
+	case Difficulty::Medium: {
+		int option = Utilities::randomInt(0, 1);
+		switch (option) {
+			// Random
+		case 0: {
+			std::vector<int> pos = randomTurn();
+			x = pos.at(0);
+			y = pos.at(1);
+		}break;
 
-        // Some Intelligence
-    case Difficulty::Medium: {
-        int option = dist1(rng);
-        switch (option) {
+			// Use m_hitSpots
+		case 1: {
+			std::vector<int> pos = smartTurn();
+			x = pos.at(0);
+			y = pos.at(1);
+		}break;
+		}
+	}break;
 
-            // Random
-        case 0: {
-            std::vector<int> pos = randomTurn();
-            x = pos.at(0);
-            y = pos.at(1);
-        }break;
-            
-            // Use m_hitSpots
-        case 1: {
-            std::vector<int> pos = smartTurn();
-            x = pos.at(0);
-            y = pos.at(1);
-        }break;
-        }
-    }break;
+		// Intelligence
+	case Difficulty::Hard: {
+		int option = Utilities::randomInt(0, 3);
+		switch (option) {
+			// Corners
+		case 0: {
+			std::vector<int> pos = cornerTurn();
+			x = pos.at(0);
+			y = pos.at(1);
+		}break;
 
-        // Intelligence
-    case Difficulty::Hard: {
-        int option = dist3(rng);
-        switch (option) {
-            // Do Corners
-        case 0: {
-            std::vector<int> pos = cornerTurn();
-            x = pos.at(0);
-            y = pos.at(1);
-        }break;
+			// Center
+		case 1: {
+			std::vector<int> pos = centerTurn();
+			x = pos.at(0);
+			y = pos.at(1);
+		}break;
 
-            // Center
-        case 1: {
-            std::vector<int> pos = centerTurn();
-            x = pos.at(0);
-            y = pos.at(1);
-        }break;
+			// Use m_hitSpots
+		case 2: {
+			std::vector<int> pos = smartTurn();
+			x = pos.at(0);
+			y = pos.at(1);
+		}break;
 
-            // Use m_hitSpots
-        case 2: {
-            std::vector<int> pos = smartTurn();
-            x = pos.at(0);
-            y = pos.at(1);
-        }break;
+			// Random
+		case 3: {
+			std::vector<int> pos = randomTurn();
+			x = pos.at(0);
+			y = pos.at(1);
+		}break;
+		}
+	}break;
+	}
 
-            // Random
-        case 3: {
-            std::vector<int> pos = randomTurn();
-            x = pos.at(0);
-            y = pos.at(1);
-        }break;
-        }
-    }break;
-    }
+	if (x < 0 || y < 0 || x >= m_playerBoard.getBoardSize() || y >= m_playerBoard.getBoardSize()) {
+		doTurn();
+		return;
+	}
 
-    if (x < 0 || y < 0 || x >= m_playerBoard.getBoardSize() || y >= m_playerBoard.getBoardSize()) {
-        doTurn();
-        return;
-    }
+	if (hasAttacked(x, y)) {
+		doTurn();
+		return;
+	}
 
-    if (hasAttacked(x,y)) {
-        doTurn();
-        return;
-    }
+	if (m_playerBoard.getShip(x, y)->isDamaged()) {
+		doTurn();
+		return;
+	}
 
-    if (m_playerBoard.getShip(x, y)->isDamaged()) {
-        doTurn();
-        return;
-    }
+	if (m_playerBoard.hitShip(x, y)) {
+		m_hitSpots.push_back(x);
+		m_hitSpots.push_back(y);
+	}
 
-    if (m_playerBoard.hitShip(x, y)) {
-        m_hitSpots.push_back(x);
-        m_hitSpots.push_back(y);
-    }
-
-    m_attackedSpots.push_back(x);
-    m_attackedSpots.push_back(y);
+	m_attackedSpots.push_back(x);
+	m_attackedSpots.push_back(y);
 }
 
 void AI::placeShips()
 {
-    std::random_device dev;
-    std::mt19937 rng(dev());
-
     ShipType currentShipType = (ShipType)1;
     for (size_t i = 0; i < 5; i++)
     {
         int currentShipTypeInt = (int)currentShipType;
 
         int shipSize = shipSizes[currentShipTypeInt];
-        std::uniform_int_distribution<std::mt19937::result_type> dist1(0, 1);
 
         bool horizontal = false;
 
@@ -125,13 +115,13 @@ void AI::placeShips()
         std::vector<ShipType> previousShipTypes;
 
         while(1) {
-            std::uniform_int_distribution<std::mt19937::result_type> distHor(0, (m_aiBoard.getBoardSize()-1) - shipSize);
-            std::uniform_int_distribution<std::mt19937::result_type> distVer(0, (m_aiBoard.getBoardSize() - 1));
+			int horPos = Utilities::randomInt(0, m_aiBoard.getBoardSize() - shipSize);
+			int verPos = Utilities::randomInt(0, m_aiBoard.getBoardSize() - 1);
 
-            horizontal = dist1(rng);
+			horizontal = Utilities::randomInt(0, 1);
 
-            x = horizontal ? distHor(rng) : distVer(rng);
-            y = horizontal ? distVer(rng) : distHor(rng);
+            x = horizontal ? horPos : verPos;
+            y = horizontal ? verPos : horPos;
 
             previousShipTypes = Utilities::getShipTypes(m_aiBoard, x, y, shipSize, horizontal);
             Utilities::setShipType(m_aiBoard, x, y, currentShipType, shipSize, horizontal);
@@ -153,12 +143,8 @@ std::vector<int> AI::randomTurn()
     unsigned int x = 0;
     unsigned int y = 0;
 
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0, (m_aiBoard.getBoardSize() - 1));
-
-    x = dist(rng);
-    y = dist(rng);
+    x = Utilities::randomInt(0, m_aiBoard.getBoardSize() - 1);
+    y = Utilities::randomInt(0, m_aiBoard.getBoardSize() - 1);
 
 
     toReturn.push_back(x);
@@ -172,12 +158,8 @@ std::vector<int> AI::cornerTurn()
     unsigned int x = 0;
     unsigned int y = 0;
 
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist1(0, 1);
-
-    x = dist1(rng) * (m_playerBoard.getBoardSize() - 1);
-    y = dist1(rng) * (m_playerBoard.getBoardSize() - 1);
+    x = Utilities::randomInt(0, 1) * (m_playerBoard.getBoardSize() - 1);
+    y = Utilities::randomInt(0, 1) * (m_playerBoard.getBoardSize() - 1);
 
     toReturn.push_back(x);
     toReturn.push_back(y);
@@ -195,12 +177,8 @@ std::vector<int> AI::centerTurn()
     // Get how wide the center should be
     int width = m_playerBoard.getBoardSize() / 4;
 
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(width, middle+width);
-
-    x = dist(rng);
-    y = dist(rng);
+    x = Utilities::randomInt(width, middle + width);
+    y = Utilities::randomInt(width, middle + width);
 
     toReturn.push_back(x);
     toReturn.push_back(y);
@@ -218,17 +196,12 @@ std::vector<int> AI::smartTurn()
         return randomTurn();
     }
 
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0, (m_hitSpots.size() / 2) - 1);
-    std::uniform_int_distribution<std::mt19937::result_type> dist7(0, 7);
-
-    int index = dist(rng) * 2;
+    int index = Utilities::randomInt(0, (m_hitSpots.size() / 2) - 1) * 2;
 
     unsigned int hitX = m_hitSpots.at(index);
     unsigned int hitY = m_hitSpots.at(index + 1);
 
-    int option = dist7(rng);
+	int option = Utilities::randomInt(0, 7);
 
     switch (option)
     {

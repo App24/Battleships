@@ -57,13 +57,19 @@ void Game::setDifficulty() {
 void Game::setupBoard() {
     unsigned int x = 0;
     unsigned int y = 0;
+
     ShipType currentShipType = (ShipType)1;
+
     std::vector<ShipType> previousShipTypes;
+
     bool selectMode = true;
-    Ship* origBoard = m_playerBoard.getShips();
+
     int* remainingShips = new int[6]{ 0, 1, 1, 1, 1, 1 };
+
     bool horizontal = true;
+
     bool finished = false;
+
     while (!finished) {
         if (remainingShips[(int)currentShipType] <= 0) {
             Utilities::setColor(DARK_RED);
@@ -206,10 +212,15 @@ void Game::playGame()
 {
     unsigned int x = 0;
     unsigned int y = 0;
+
     ShipType previousShipType = m_guessBoard.getShip(x, y)->getType();
+
     Utilities::updateShipSelection(m_guessBoard, previousShipType, x, y);
+
     bool playerWon = false;
+
     bool finished = false;
+
     while (!finished) {
         std::cout << "Other Player's Board" << std::endl;
         m_guessBoard.showBoard();
