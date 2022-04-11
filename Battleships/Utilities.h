@@ -26,7 +26,7 @@
 #define YELLOW 14
 #define WHITE 15
 #define BACKGROUND_COLOR 16
-#define GET_BACKGROUND(f, b) (f+b*BACKGROUND_COLOR)
+#define GET_BACKGROUND(F, B) ((F)+(B)*BACKGROUND_COLOR)
 
 #pragma endregion
 
@@ -63,6 +63,7 @@ public:
 
 	static std::vector<ShipType> getShipTypes(Board& board, unsigned int x, unsigned int y, unsigned int shipSize, bool horizontal);
 
+	// Changes the selection to be of type ocean when hovered over an ocean tile
 	static void updateShipSelection(Board& board, ShipType& previousShipType, unsigned int x, unsigned int y);
 
 	// Check if any ships are overlaying
@@ -71,6 +72,7 @@ public:
 	// Check if all ships on a board have been destroyed
 	static bool allDestroyed(Board& board);
 
+	// Wrapper to get a random int
 	static int randomInt(int minValue, int maxValue);
 private:
 	static HANDLE hConsole;

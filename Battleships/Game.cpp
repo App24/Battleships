@@ -18,7 +18,7 @@ void Game::setDifficulty() {
     int colors[] = { DARK_GREEN,YELLOW,DARK_RED };
     while (!finished) {
         int currentDifficultyInt = (int)currentDifficulty;
-        std::cout << "Current Difficulty: ";
+        std::cout << "Difficulty: ";
         Utilities::setColor(colors[currentDifficultyInt]);
         std::cout << difficulty_str[currentDifficultyInt] << std::endl;
         Utilities::resetColor();
@@ -139,6 +139,7 @@ void Game::setupBoard() {
             case KEY_R: {
                 Utilities::setShipType(m_playerBoard, x, y, previousShipTypes, horizontal);
                 horizontal = !horizontal;
+                // Prevent from going off-bounds when rotating
                 if (horizontal && x >= m_playerBoard.getBoardSize() - shipSizes[(int)currentShipType]) {
                     x = m_playerBoard.getBoardSize() - shipSizes[(int)currentShipType];
                 }
@@ -270,6 +271,7 @@ void Game::playGame()
         }break;
 
         case KEY_ENTER: {
+            // Prevent from shooting at a place you already shot
             if (m_guessBoard.getShip(x, y)->getType() != ShipType::Shot) {
                 m_aiBoard.hitShip(x, y);
                 m_guessBoard.getShip(x, y)->setDamaged(m_aiBoard.getShip(x, y)->getType() != ShipType::Null);
