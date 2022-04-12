@@ -1,6 +1,6 @@
 #include "AI.h"
 
-#include "Utilities.h"
+#include "Utils.h"
 #include <random>
 
 AI::AI(Board& board, Board& playerBoard):m_aiBoard(board), m_playerBoard(playerBoard)
@@ -12,64 +12,71 @@ void AI::doTurn() {
 	unsigned int x = 0;
 	unsigned int y = 0;
 
-	switch (Utilities::getDifficulty()) {
+	switch (gameDifficulty) {
 		// Truly Random
 	case Difficulty::Easy: {
-		std::vector<int> pos = randomTurn();
-		x = pos.at(0);
-		y = pos.at(1);
+		int* pos = randomTurn();
+        x = pos[0];
+        y = pos[1];
+        delete pos;
 	}break;
 
 		// Some Intelligence
 	case Difficulty::Medium: {
-		int option = Utilities::randomInt(0, 1);
+		int option = randomInt(0, 1);
 		switch (option) {
 			// Random
 		case 0: {
-			std::vector<int> pos = randomTurn();
-			x = pos.at(0);
-			y = pos.at(1);
+			int* pos = randomTurn();
+            x = pos[0];
+            y = pos[1];
+            delete pos;
 		}break;
 
 			// Use m_hitSpots
 		case 1: {
-			std::vector<int> pos = smartTurn();
-			x = pos.at(0);
-			y = pos.at(1);
+			int* pos = smartTurn();
+            x = pos[0];
+            y = pos[1];
+            delete pos;
 		}break;
 		}
 	}break;
 
 		// Intelligence
 	case Difficulty::Hard: {
-		int option = Utilities::randomInt(0, 3);
+		int option = randomInt(0, 3);
 		switch (option) {
 			// Corners
 		case 0: {
-			std::vector<int> pos = cornerTurn();
-			x = pos.at(0);
-			y = pos.at(1);
+			int* pos = cornerTurn();
+            x = pos[0];
+            y = pos[1];
+            delete pos;
 		}break;
 
 			// Center
 		case 1: {
-			std::vector<int> pos = centerTurn();
-			x = pos.at(0);
-			y = pos.at(1);
+			int* pos = centerTurn();
+            x = pos[0];
+            y = pos[1];
+            delete pos;
 		}break;
 
 			// Use m_hitSpots
 		case 2: {
-			std::vector<int> pos = smartTurn();
-			x = pos.at(0);
-			y = pos.at(1);
+			int* pos = smartTurn();
+			x = pos[0];
+			y = pos[1];
+            delete pos;
 		}break;
 
 			// Random
 		case 3: {
-			std::vector<int> pos = randomTurn();
-			x = pos.at(0);
-			y = pos.at(1);
+			int* pos = randomTurn();
+            x = pos[0];
+            y = pos[1];
+            delete pos;
 		}break;
 		}
 	}break;
@@ -85,7 +92,7 @@ void AI::doTurn() {
 		return;
 	}
 
-	if (m_playerBoard.getShip(x, y)->isDamaged()) {
+	if (m_playerBoard.getShip(x, y).damaged) {
 		doTurn();
 		return;
 	}
@@ -115,60 +122,60 @@ void AI::placeShips()
         std::vector<ShipType> previousShipTypes;
 
         while(1) {
-			int horPos = Utilities::randomInt(0, m_aiBoard.getBoardSize() - shipSize);
-			int verPos = Utilities::randomInt(0, m_aiBoard.getBoardSize() - 1);
+			int horPos = randomInt(0, m_aiBoard.getBoardSize() - shipSize);
+			int verPos = randomInt(0, m_aiBoard.getBoardSize() - 1);
 
-			horizontal = Utilities::randomInt(0, 1);
+			horizontal = randomInt(0, 1);
 
             x = horizontal ? horPos : verPos;
             y = horizontal ? verPos : horPos;
 
-            previousShipTypes = Utilities::getShipTypes(m_aiBoard, x, y, shipSize, horizontal);
-            Utilities::setShipType(m_aiBoard, x, y, currentShipType, shipSize, horizontal);
+            previousShipTypes = m_aiBoard.getShipTypes(x, y, shipSize, horizontal);
+            m_aiBoard.setShipType(x, y, currentShipType, shipSize, horizontal);
 
-            if (!Utilities::anyOverlay(m_aiBoard)) {
+            if (!m_aiBoard.anyOverlap()) {
                 break;
             }
 
-            Utilities::setShipType(m_aiBoard, x, y, previousShipTypes, horizontal);
+            m_aiBoard.setShipTypes(x, y, previousShipTypes, horizontal);
         }
 
         currentShipType = (ShipType)++currentShipTypeInt;
     }
 }
 
-std::vector<int> AI::randomTurn()
+int* AI::randomTurn()
 {
-    std::vector<int> toReturn;
+    int* toReturn = new int[2];
     unsigned int x = 0;
     unsigned int y = 0;
 
-    x = Utilities::randomInt(0, m_aiBoard.getBoardSize() - 1);
-    y = Utilities::randomInt(0, m_aiBoard.getBoardSize() - 1);
+    x = randomInt(0, m_aiBoard.getBoardSize() - 1);
+    y = randomInt(0, m_aiBoard.getBoardSize() - 1);
 
 
-    toReturn.push_back(x);
-    toReturn.push_back(y);
+    toReturn[0] = x;
+    toReturn[1] = y;
     return toReturn;
 }
 
-std::vector<int> AI::cornerTurn()
+int* AI::cornerTurn()
 {
-    std::vector<int> toReturn;
+    int* toReturn = new int[2];
     unsigned int x = 0;
     unsigned int y = 0;
 
-    x = Utilities::randomInt(0, 1) * (m_playerBoard.getBoardSize() - 1);
-    y = Utilities::randomInt(0, 1) * (m_playerBoard.getBoardSize() - 1);
+    x = randomInt(0, 1) * (m_playerBoard.getBoardSize() - 1);
+    y = randomInt(0, 1) * (m_playerBoard.getBoardSize() - 1);
 
-    toReturn.push_back(x);
-    toReturn.push_back(y);
+    toReturn[0] = x;
+    toReturn[1] = y;
     return toReturn;
 }
 
-std::vector<int> AI::centerTurn()
+int* AI::centerTurn()
 {
-    std::vector<int> toReturn;
+    int* toReturn = new int[2];
     unsigned int x = 0;
     unsigned int y = 0;
 
@@ -177,31 +184,32 @@ std::vector<int> AI::centerTurn()
     // Get how wide the center should be
     int width = m_playerBoard.getBoardSize() / 4;
 
-    x = Utilities::randomInt(width, middle + width);
-    y = Utilities::randomInt(width, middle + width);
+    x = randomInt(width, middle + width);
+    y = randomInt(width, middle + width);
 
-    toReturn.push_back(x);
-    toReturn.push_back(y);
+    toReturn[0] = x;
+    toReturn[1] = y;
     return toReturn;
 }
 
-std::vector<int> AI::smartTurn()
+int* AI::smartTurn()
 {
-    std::vector<int> toReturn;
+    int* toReturn = new int[2];
     unsigned int x = 0;
     unsigned int y = 0;
 
     // if the AI hasnt hit any places yet, do a random turn
     if (m_hitSpots.size() <= 0) {
+        delete toReturn;
         return randomTurn();
     }
 
-    int index = Utilities::randomInt(0, (m_hitSpots.size() / 2) - 1) * 2;
+    int index = randomInt(0, (m_hitSpots.size() / 2) - 1) * 2;
 
     unsigned int hitX = m_hitSpots.at(index);
     unsigned int hitY = m_hitSpots.at(index + 1);
 
-	int option = Utilities::randomInt(0, 7);
+	int option = randomInt(0, 7);
 
     switch (option)
     {
@@ -258,11 +266,12 @@ std::vector<int> AI::smartTurn()
     // If the AI has attacked that place already, get a new place to attack
     // Potential infinite loop?
     if (hasAttacked(x, y)) {
+        delete toReturn;
         return smartTurn();
     }
 
-    toReturn.push_back(x);
-    toReturn.push_back(y);
+    toReturn[0] = x;
+    toReturn[1] = y;
     return toReturn;
 }
 

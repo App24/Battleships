@@ -16,10 +16,10 @@ private:
 	std::vector<int> m_hitSpots, m_attackedSpots;
 
 	// Different things the AI can do depending on the difficulty
-	std::vector<int> randomTurn();
-	std::vector<int> cornerTurn();
-	std::vector<int> centerTurn();
-	std::vector<int> smartTurn();
+	int* randomTurn();
+	int* cornerTurn();
+	int* centerTurn();
+	int* smartTurn();
 
 	// Allows to check if the AI has attacked one spot already
 	bool hasAttacked(unsigned int x, unsigned int y);

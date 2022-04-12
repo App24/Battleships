@@ -7,5 +7,9 @@ enum class Difficulty {
 	Hard
 };
 
-// The str version of the difficulties, allows for easy printing to the console
-static const char* difficulty_str[] = { "Easy", "Medium", "Hard" };
+// The string version of the difficulties, allows for easy printing to the console
+static const char* difficultyString[] = { 
+	"Easy", 
+	"Medium", 
+	"Hard" 
+};

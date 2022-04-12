@@ -1,11 +1,12 @@
+#include "Utils.h"
+
 #include "Game.h"
-#include "Utilities.h"
 
 int main() {
-    Utilities::init();
-    Utilities::setDifficulty(Difficulty::Medium);
+	input_init();
 
-    Game game;
-    game.startGame();
-    return 0;
+	Game game;
+	game.startGame();
+
+	return 0;
 }
